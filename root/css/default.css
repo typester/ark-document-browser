@@ -204,12 +204,17 @@ pre code {
   padding: 5px 0;
 }
 
-ul {
+ul, ol {
   padding: 5px 30px;
 }
 
 ul li {
   list-style-type: circle;
+  padding: 5px;
+}
+
+ol li {
+  list-style-type: decimal;
   padding: 5px;
 }
 
