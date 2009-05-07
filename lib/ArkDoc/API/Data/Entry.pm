@@ -26,7 +26,7 @@ has title => (
     lazy    => 1,
     default => sub {
         my $self = shift;
-        my ($title) = $self->section('NAME') =~ / - (.*)/;
+        my ($title) = $self->section('NAME') =~ / - (.*)/ or return '';
         $title =~ s/<.*?>//g;
         $title;
     },
@@ -113,19 +113,19 @@ sub sections {
 
 sub all_sections {
     my $self = shift;
-    map { $_->content_list } $self->tree->find('h1');
+    map { $_->content_list } $self->tree->find('h2');
 }
 
 sub section {
     my ($self, $section_name) = @_;
 
     my $section = $self->tree->look_down(
-        _tag => 'h1',
+        _tag => 'h2',
         sub { $_[0]->content->[0] eq $section_name },
     );
 
     my $content = q[];
-    while ($section and $section = $section->right and $section->tag ne 'h1') {
+    while ($section and $section = $section->right and $section->tag ne 'h2') {
         $content .= $section->as_XML . "\n";
     }
 
@@ -145,9 +145,16 @@ sub build_tree {
     # remove first num strings in <ol> tag
     my @list = $tree->look_down( _tag => 'li', sub { $_[0]->parent->tag eq 'ol' } );
     for my $li (@list) {
-        my $first_child = $li->shift_content;
+        my $first_child = shift @{ $li->content_array_ref } or next;
         $first_child =~ s/^\d+\.\s+// unless ref $first_child;
         $li->unshift_content($first_child);
+    }
+
+    # shift header level
+    my @header = $tree->look_down( _tag => qr/^h[1-5]$/ );
+    for my $header (@header) {
+        my ($n) = $header->tag =~ /(\d)/;
+        $header->tag( 'h' . ++$n );
     }
 }
 
