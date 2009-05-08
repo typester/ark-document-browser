@@ -1,10 +1,9 @@
 <%=r $self->render('inc/header') %>
 
-<ul id="index">
-% for my $section ($stash->{doc}->sections) {
-<li><a href="#<%= $section %>"><%= $section %></a></li>
-% }
-</ul>
+
+<div id="index">
+<%=r $stash->{doc}->toc_list %>
+</div>
 
 % if (my $desc = $stash->{doc}->section('DESCRIPTION')) {
 <%=r $desc %>

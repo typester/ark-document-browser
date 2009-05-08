@@ -81,6 +81,28 @@ has perldoc_url_prefix => (
     isa => 'Str',
 );
 
+has toc_list => (
+    is      => 'rw',
+    isa     => 'Str',
+    lazy    => 1,
+    default => sub {
+        my $self = shift;
+        die "cannot call this method before parsing html" unless $self->{tree};
+
+        my $toc = '<ul>';
+        for my $section ($self->sections) {
+            $toc .= '<li>' . $self->section_link($section);
+            $toc .= $self->toc_in_section($section);
+            $toc .= '</li>';
+        }
+        $toc .= '</ul>';
+
+        $toc;
+    },
+);
+
+no Mouse;
+
 sub new_from_name {
     my ($self, $name, @args) = @_;
     return unless $name;
@@ -132,6 +154,52 @@ sub section {
     $content;
 }
 
+sub toc_in_section {
+    my ($self, $section_name) = @_;
+
+    my $section = $self->tree->look_down(
+        _tag => 'h2',
+        sub { $_[0]->content->[0] eq $section_name },
+    ) or return;
+
+    my $toc = q[];
+    my $num = 2;
+
+    while ($section and $section = $section->right and $section->tag ne 'h2') {
+        next unless $section->tag =~ /^h[2-6]$/;
+        my ($n) = $section->tag =~ /(\d)/;
+
+        if ($num < $n) {
+            $toc .= join '', '<ul><li>', $self->section_link($section);
+        }
+        elsif ($num == $n) {
+            $toc .= join '', '</li><li>', $self->section_link($section);
+        }
+        else {
+            $toc .= join '', '</li></ul></li><li>', $self->section_link($section);
+        }
+
+        $num = $n;
+    }
+    return '' unless $toc;
+
+    $toc .= '</li></ul>' while $num-- == 2;
+    $toc;
+}
+
+sub section_link {
+    my ($self, $section) = @_;
+
+    unless (ref $section) {
+        $section = $self->tree->look_down(
+            _tag => 'h2', sub { $_[0]->content->[0] eq $section },
+        ) or return;
+    }
+
+    return join '', '<a href="#', $section->as_trimmed_text, '">',
+        $section->as_trimmed_text, '</a>';
+}
+
 sub build_tree {
     my ($self, $html) = @_;
 
@@ -150,11 +218,12 @@ sub build_tree {
         $li->unshift_content($first_child);
     }
 
-    # shift header level
+    # shift header level, and add id attr
     my @header = $tree->look_down( _tag => qr/^h[1-5]$/ );
     for my $header (@header) {
         my ($n) = $header->tag =~ /(\d)/;
         $header->tag( 'h' . ++$n );
+        $header->attr( id => $header->as_trimmed_text );
     }
 }
 
