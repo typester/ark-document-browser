@@ -56,17 +56,34 @@ body em {
 }
 
 #index {
-    width: 200px;
+    font-size: 86%;
+    width: 280px;
     float: right;
-    padding: 10px;
-    margin: 10px;
+    padding: 5px;
+    margin: 20px;
+    margin-right: 0;
     border: 1px solid #cecece;
     background-color: #f5f0f5;
+}
+
+#index ul {
+    padding: 5px;
+    margin: 0;
+    margin-left: 5px;
+}
+
+#index ul ul {
+    padding: 0;
+    margin: 0;
+    margin-left: 20px;
+    margin-top: 5px;
 }
 
 #index li {
     list-style-position: inside;
     list-style-type: square;
+    margin: 0;
+    padding: 2px;
 }
 
 #index li a {
