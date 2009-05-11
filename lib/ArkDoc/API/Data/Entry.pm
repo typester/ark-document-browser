@@ -183,7 +183,7 @@ sub toc_in_section {
     }
     return '' unless $toc;
 
-    $toc .= '</li></ul>' while $num-- == 2;
+    $toc .= '</li></ul>' while $num-- > 2;
     $toc;
 }
 
