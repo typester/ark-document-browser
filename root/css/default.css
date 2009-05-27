@@ -196,16 +196,15 @@ p {
 }
 
 pre {
-  border: 1px solid #d3d3d3;
   margin: 6px 0;
 }
 
 pre code {
   display: block;
-  background-color: #f5f5f5;
-  padding: 8px;
+  color: #fefefe;
+  background-color: #333;
+  padding: 10px;
   font-family: Consolas, Monaco, "Courier New", monospace;
-  letter-spacing: 1px;
 }
 
 #footer {
