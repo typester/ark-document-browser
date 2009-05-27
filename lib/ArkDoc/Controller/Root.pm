@@ -13,6 +13,7 @@ sub render_page :Path :Args {
     my $doc = $c->stash->{doc} = $c->model('Pod')->get_entry($ns, @page)
         or $c->detach('not_found');
 
+    $c->stash->{site_title} = $c->config->{site_title};
     $c->stash->{page_title} = $doc->title if @page;
 
     $c->view('MT')->template('page');

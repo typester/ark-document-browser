@@ -3,9 +3,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja">
 <head>
 <link rel="stylesheet" type="text/css" href="<%= $c->uri_for('/css/default.css') %>" />
-<title><%= $s->{page_title} ? "$s->{page_title} - " : ''  %>Arc Documentation (DRAFT)</title>
+<title><%= $s->{page_title} ? "$s->{page_title} - " : ''  %><%= $s->{site_title} %></title>
 </head>
 <body>
 <div id="container">
 
-<h1><%= $s->{page_title} || 'Ark Documentation (DRAFT)' %></h1>
+<h1><%= $s->{page_title} || $s->{site_title} %></h1>

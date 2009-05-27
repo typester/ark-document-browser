@@ -3,8 +3,9 @@ use Ark;
 
 our $VERSION = '0.01_001';
 
-#conf 'pod_namespace' => 'Ark::Manual';
-#conf 'pod_namespace' => 'Catalyst::Manual';
-conf 'pod_namespace' => 'Moose';
+__PACKAGE__->config(
+    pod_namespace => 'Ark::Manual',
+    site_title    => 'Ark 0.1 Documentation (DRAFT)',
+);
 
 1;
