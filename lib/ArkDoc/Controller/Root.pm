@@ -25,7 +25,13 @@ sub view :Local :Args(0) {
 
     my $ns  = $c->app->config->{pod_namespace};
     if ($doc =~ s!^$ns(::)?!!) {
-        $c->redirect_and_detach( $c->uri_for('', split('::', $doc)) );
+        my ($section) = $doc =~ m!/"?(.+)"?!;
+        $doc =~ s!/.*$!!;
+
+        my $redirect_to = $c->uri_for('', split('::', $doc));
+        $redirect_to .= "#${section}" if $section;
+
+        $c->redirect_and_detach( $redirect_to );
     }
     else {
         $c->redirect_and_detach( 'http://search.cpan.org/perldoc?' . $doc );
