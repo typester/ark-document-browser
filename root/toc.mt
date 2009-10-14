@@ -1,5 +1,6 @@
-<%=r $self->render('inc/header') %>
+% extends 'inc/base'
 
+% block content => sub {
 <ul>
 % for my $module (sort keys %{ $stash->{modules} }) {
 <li>
@@ -8,5 +9,5 @@
 </li>
 % }
 </ul>
+% } # endblock content
 
-<%=r $self->render('inc/footer') %>

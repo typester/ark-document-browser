@@ -1,17 +1,21 @@
-<%=r $self->render('inc/header') %>
+% extends 'inc/base'
 
+% block content => sub {
 
 <div id="index">
-<%=r $stash->{doc}->toc_list %>
+<%= raw_string $stash->{doc}->toc_list %>
 </div>
 
 % if (my $desc = $stash->{doc}->section('DESCRIPTION')) {
-<%=r $desc %>
+<%= raw_string $desc %>
 % }
 
 % for my $section ($stash->{doc}->sections) {
 <h2 id="<%= $section %>"><%= $section %></h2>
-<%=r $stash->{doc}->section( $section ) %>
+<%= raw_string $stash->{doc}->section( $section ) %>
 % }
 
-<%=r $self->render('inc/footer') %>
+% } # endblock content
+
+
+
